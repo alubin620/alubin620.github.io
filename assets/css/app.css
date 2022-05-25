@@ -1554,14 +1554,14 @@ lesshat-selector {
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .heading {
-    font-size: 2.34375em;
+    font-size: 3.34375em;
     margin: 45px 0 10px;
   }
 }
 /* Medium devices (desktops, 992px and up) */
 @media (min-width: 1200px) {
   .heading {
-    font-size: 3.125em;
+    font-size: 5.125em;
     margin: 45px 0 10px;
   }
 }
