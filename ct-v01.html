@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" style="background:black">
+<head>
+    <!-- SERVICE WORKER (storing CACHE) -->
+    <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', function() {
+            navigator.serviceWorker.register('/sw.js').then(function(registration) {
+              // Registration was successful
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function(err) {
+              // registration failed :(
+              console.log('ServiceWorker registration failed: ', err);
+            });
+          });
+        }
+      </script>
+    <link rel="manifest" href="manifest.json" />
+    <!-- ios support -->
+    <link rel="apple-touch-icon" href="images/icons/icon-72x72.png" />
+    <link rel="apple-touch-icon" href="images/icons/icon-96x96.png" />
+    <link rel="apple-touch-icon" href="images/icons/icon-128x128.png" />
+    <link rel="apple-touch-icon" href="images/icons/icon-144x144.png" />
+    <link rel="apple-touch-icon" href="images/icons/icon-152x152.png" />
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png" />
+    <link rel="apple-touch-icon" href="images/icons/icon-384x384.png" />
+    <link rel="apple-touch-icon" href="images/icons/icon-512x512.png" />
+    <meta name="apple-mobile-web-app-status-bar" content="#db4938" />
+    <meta name="theme-color" content="#000000" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" maximum-scale=1>
+    <title>5 Cat Countdown</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        .countdown-container {
+            text-align: center;
+        }
+        .countdown-title {
+            font-size: 5vw; /* Adjust as needed */
+            font-weight: bold;
+            color: #ffffff;
+        }
+        #countdown {
+            display: flex;
+            justify-content: center;
+        }
+        .time-section {
+            text-align: center;
+            margin: 0px;
+        }
+        .time-section span {
+            font-size: 15vw; /* Adjust as needed */
+            font-weight: bold;
+            color: #ffffff;
+            margin: 1vw; /* Adjust as needed */
+            letter-spacing: 0px;
+        }
+        .time-section .separator {
+            font-size: 15vw; /* Adjust as needed */
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0px;
+        }
+        .smalltext {
+            color: #fff;
+            font-size: 2vw; /* Adjust as needed */
+        }
+        /* Styles for user options */
+        .user-options {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        /* Style for input fields */
+        .user-options input {
+            margin: 5px 0;
+            padding: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="countdown-container">
+        <div class="countdown-title">TITLE GOES HERE</div>
+        <div id="countdown">
+            <div class="time-section">
+                <span class="days" id="days">00</span>
+                <div class="smalltext">Days</div>
+            </div>
+            <div class="time-section">
+                <span class="separator">:</span>
+                <span class="hours" id="hours">00</span>
+                <div class="smalltext">Hours</div>
+            </div>
+            <div class="time-section">
+                <span class="separator">:</span>
+                <span class="minutes" id="minutes">00</span>
+                <div class="smalltext">Minutes</div>
+            </div>
+            <div class="time-section">
+                <span class="separator">:</span>
+                <span class="seconds" id="seconds">00</span>
+                <div class="smalltext">Seconds</div>
+            </div>
+        </div>
+    </div>
+    <!-- User options for changing title and countdown -->
+    <div class="user-options">
+        <input type="text" id="newTitle" placeholder="New Title">
+        <input type="datetime-local" id="newDate">
+        <button onclick="updateCountdownWithUserInput()">Update</button>
+    </div>
+    <script>
+        // Set the target date and time for the countdown (year, month, day, hours, minutes, seconds)
+        let targetDate = new Date("2023-09-18T13:00:00").getTime();
+
+        // Update the countdown every second
+        const updateCountdown = () => {
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
+
+            if (timeLeft < 0) {
+                document.getElementById('days').innerHTML = '00';
+                document.getElementById('hours').innerHTML = '00';
+                document.getElementById('minutes').innerHTML = '00';
+                document.getElementById('seconds').innerHTML = '00';
+            } else {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerHTML = formatTime(days);
+                document.getElementById('hours').innerHTML = formatTime(hours);
+                document.getElementById('minutes').innerHTML = formatTime(minutes);
+                document.getElementById('seconds').innerHTML = formatTime(seconds);
+            }
+        };
+
+        // Helper function to add leading zero to single-digit numbers
+        const formatTime = (time) => {
+            return time < 10 ? `0${time}` : time;
+        };
+
+        // Initial update
+        updateCountdown();
+
+        // Update the countdown every second
+        setInterval(updateCountdown, 1000);
+
+        // Function to update countdown with user input
+        function updateCountdownWithUserInput() {
+            const newTitle = document.getElementById('newTitle').value;
+            const newDate = new Date(document.getElementById('newDate').value).getTime();
+
+            // Update title if provided
+            if (newTitle) {
+                document.querySelector('.countdown-title').textContent = newTitle;
+            }
+
+            // Update target date if provided
+            if (newDate) {
+                targetDate = newDate;
+            }
+
+            // Manually trigger countdown update
+            updateCountdown();
+        }
+    </script>
+</body>
+</html>
