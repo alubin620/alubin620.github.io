@@ -50,7 +50,7 @@ self.addEventListener('activate', event => {
 });
 
 // Load the user input data from local storage on page load
-window.addEventListener('load', () => {
+self.addEventListener('load', () => {
   const savedTitle = localStorage.getItem('countdownTitle');
   const savedDate = localStorage.getItem('countdownDate');
 
