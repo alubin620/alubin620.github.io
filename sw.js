@@ -2,7 +2,7 @@
 const CACHE_NAME = 'my-cache';
 // Files to cache
 const urlsToCache = [
-  '/ct-v01.html',
+  '/20230823_countdown-timer.html',
   '/manifest.json'
 ];
 
@@ -48,43 +48,3 @@ self.addEventListener('activate', event => {
     })
   );
 });
-
-// Load the user input data from local storage on page load
-self.addEventListener('load', () => {
-  const savedTitle = localStorage.getItem('countdownTitle');
-  const savedDate = localStorage.getItem('countdownDate');
-
-  if (savedTitle) {
-      document.getElementById('newTitle').value = savedTitle;
-  }
-
-  if (savedDate) {
-      document.getElementById('newDate').value = savedDate;
-  }
-
-  // Trigger countdown update with the loaded data
-  updateCountdownWithUserInput();
-});
-
-// Function to update countdown with user input
-function updateCountdownWithUserInput() {
-  const newTitle = document.getElementById('newTitle').value;
-  const newDate = new Date(document.getElementById('newDate').value).getTime();
-
-  // Save user input data to local storage
-  localStorage.setItem('countdownTitle', newTitle);
-  localStorage.setItem('countdownDate', newDate);
-
-  // Update title if provided
-  if (newTitle) {
-      document.querySelector('.countdown-title').textContent = newTitle;
-  }
-
-  // Update target date if provided
-  if (newDate) {
-      targetDate = newDate;
-  }
-
-  // Manually trigger countdown update
-  updateCountdown();
-}

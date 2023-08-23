@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" style="background:black">
+
+<head>
+    <!-- SERVICE WORKER (storing CACHE) -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/sw.js').then(function (registration) {
+                    // Registration was successful
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function (err) {
+                    // registration failed :(
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
+    <link rel="manifest" href="manifest.json" />
+    <!-- ios support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="theme-color" content="#000000" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" maximum-scale=1.0>
+    <title>Countdown</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .countdown-container {
+            text-align: center;
+        }
+
+        .countdown-title {
+            font-size: 5vw;
+            /* Adjust as needed */
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .countdown-message {
+            font-size: 1.5vw;
+            font-style: italic;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        #countdown {
+            display: flex;
+            justify-content: center;
+        }
+
+        .time-section {
+            text-align: center;
+            margin: 0px;
+        }
+
+        .time-section span {
+            font-size: 15vw;
+            /* Adjust as needed */
+            font-weight: bold;
+            color: #ffffff;
+            margin: 1vw;
+            /* Adjust as needed */
+            letter-spacing: 0px;
+        }
+
+        .separator {
+            font-size: 15vw;
+            /* Adjust as needed */
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0px;
+        }
+
+        .smalltext {
+            color: #fff;
+            font-size: 2vw;
+            /* Adjust as needed */
+        }
+
+        /* Button styles */
+        #settings-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        /* Menu styles */
+        #menu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            padding: 20px;
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="countdown-container">
+        <div class="countdown-title"></div>
+        <div class="countdown-message" id="countdown-message"></div>
+        <div id="countdown">
+            <div class="time-section">
+                <span class="days" id="days">00</span>
+                <div class="smalltext">Days</div>
+            </div>
+            <span class="separator">:</span>
+            <div class="time-section">
+                <span class="hours" id="hours">00</span>
+                <div class="smalltext">Hours</div>
+            </div>
+            <span class="separator">:</span>
+            <div class="time-section">
+                <span class="minutes" id="minutes">00</span>
+                <div class="smalltext">Minutes</div>
+            </div>
+            <span class="separator">:</span>
+            <div class="time-section">
+                <span class="seconds" id="seconds">00</span>
+                <div class="smalltext">Seconds</div>
+            </div>
+            <div id="menu" style="display: none;">
+                <input type="text" id="new-title" placeholder="Enter New Titles">
+                <input type="datetime-local" id="new-date">
+                <button id="apply-button">Okay</button>
+            </div>
+            <button id="settings-button"
+                style="position: fixed; bottom: 20px; right: 20px; background-color: black; color: white; border: none; outline: none; box-shadow: none;">&#9776;</button>
+        </div>
+    </div>
+
+    <script>
+        // Set the target date and time for the countdown (year, month, day, hours, minutes, seconds)
+        let targetDate = new Date("2001-01-01T00:00:00").getTime();
+
+        // Update the countdown every second
+        const updateCountdown = () => {
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
+
+            if (timeLeft < 0) {
+                document.getElementById('days').innerHTML = '00';
+                document.getElementById('hours').innerHTML = '00';
+                document.getElementById('minutes').innerHTML = '00';
+                document.getElementById('seconds').innerHTML = '00';
+            } else {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerHTML = formatTime(days);
+                document.getElementById('hours').innerHTML = formatTime(hours);
+                document.getElementById('minutes').innerHTML = formatTime(minutes);
+                document.getElementById('seconds').innerHTML = formatTime(seconds);
+            }
+        };
+
+        // Helper function to add leading zero to single-digit numbers
+        const formatTime = (time) => {
+            return time < 10 ? `0${time}` : time;
+        };
+
+        // Initial update
+        updateCountdown();
+
+        // Update the countdown every second
+        let countdownInterval = setInterval(updateCountdown, 100);
+
+        // Get the elements
+        const settingsButton = document.getElementById('settings-button');
+        const menu = document.getElementById('menu');
+        const applyButton = document.getElementById('apply-button');
+        const countdownTitle = document.querySelector('.countdown-title');
+
+        // Event listener for the menu button click
+        settingsButton.addEventListener('click', () => {
+            // Toggle the visibility of the menu
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Event listener for the apply button click
+        applyButton.addEventListener('click', () => {
+            // Get the new title and target date values entered by the user
+            var titleInput = document.getElementById('new-title');
+            var dateInput = document.getElementById('new-date');
+
+            if (titleInput.value === '') {
+                titleInput.value = titleInput.placeholder;
+            }
+
+            if (dateInput.value === '') {
+                dateInput.value = dateInput.placeholder;
+            }
+
+            const newTitle = titleInput.value;
+            const newDate = dateInput.value;
+
+            // Update the countdown title and target date
+            countdownTitle.textContent = newTitle;
+            localStorage.setItem('title', newTitle); // Store the title in localStorage
+
+            // Set the new target date for the countdown
+            const newTargetDate = new Date(newDate).getTime();
+            targetDate = newTargetDate;
+
+            // Restart the countdown with new target date
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(updateCountdown, 100);
+
+            // Hide the menu
+            menu.style.display = 'none';
+        });
+
+        // When the user inputs a new date and time, store it in localStorage
+        document.getElementById('new-date').addEventListener('change', function () {
+            localStorage.setItem('date', this.value);
+
+            var countdownMessage = document.getElementById('countdown-message');
+            var date = new Date(this.value);
+            var options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            var message = "Counting down to " + date.toLocaleString('en-US', options);
+            countdownMessage.textContent = message;
+
+            //store the message in localstorage
+            localStorage.setItem('message', message);
+        });
+
+        // When the page loads, get the date and time from localStorage and set it as the input value
+        window.onload = function () {
+            var now = new Date();
+            var date = now.toISOString().substring(0, 10);
+            var time = now.getHours() + ":" + now.getMinutes();
+            var dateTime = date + "T" + time;
+
+            // Retrieve the saved countdown title and message from local storage.
+            var savedTitle = localStorage.getItem('title');
+            var savedDate = localStorage.getItem('date');
+            var savedMessage = localStorage.getItem('message');  // retrieve saved message from localStorage here
+
+            var newTitleElement = document.getElementById('new-title');
+            var newDateElement = document.getElementById('new-date');
+
+            // Display the saved countdown message, if it exists.
+            var countdownMessage = document.getElementById('countdown-message');
+            if (savedMessage) {
+                countdownMessage.textContent = savedMessage;   // update the countdown message here
+            }
+            if (savedTitle) {
+                newTitleElement.placeholder = savedTitle;
+                countdownTitle.textContent = savedTitle;
+            } else {
+                newTitleElement.placeholder = "Enter New Title";
+            }
+
+            if (savedDate) {
+                newDateElement.placeholder = savedDate;
+                newDateElement.value = savedDate;
+                targetDate = new Date(savedDate).getTime();
+            } else {
+                newDateElement.placeholder = dateTime;
+            }
+        };
+    </script>
+</body>
+
+</html>

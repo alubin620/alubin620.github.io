@@ -1,7 +1,7 @@
 {
   "name": "Countdown Timer",
   "short_name": "Countdown Timer",
-  "start_url": "countdown-timer.html",
+  "start_url": "20230823_countdown-timer.html",
   "display": "standalone",
   "background_color": "#FFFFFF",
   "theme_color": "#FFFFFF",
