@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>London Time</title>
+    <!-- ios support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="theme-color" content="#000000" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" maximum-scale=1.0>
+    <title>London Time</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Set the body height to the full viewport height */
+            margin: 0;
+            padding: 20px;
+        }
+
+        div {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 5vw; /* Adjust the font size relative to the viewport width */
+            margin-bottom: 5px; /* Adjust the bottom margin as needed */
+        }
+
+        p {
+            font-size: 10vw; /* Adjust the font size relative to the viewport width */
+            font-weight: bold;
+            margin-top: 50px; /* Adjust the top margin as needed */
+            margin-bottom: 5px; /* Adjust the bottom margin as needed */
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Current Time in London</h1>
+        <p id="london-time"></p>
+    </div>
+
+    <script>
+        function updateLondonTime() {
+            var londonTimeElement = document.getElementById('london-time');
+            var londonTime = new Date().toLocaleTimeString('en-US', { timeZone: 'Europe/London' });
+            londonTimeElement.textContent = londonTime;
+        }
+
+        // Update time every second
+        setInterval(updateLondonTime, 1000);
+
+        // Initial update
+        updateLondonTime();
+    </script>
+</body>
+</html>
