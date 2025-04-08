@@ -166,7 +166,7 @@ a:after {
 .section {
   z-index: 2000;
   padding: 50px 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color:#16202b;
 }
 .section-title {
   margin: 0 0 20px;
@@ -182,8 +182,10 @@ a:after {
   background: rgba(255, 255, 255, 0.13);
   margin: 0 auto 35px;
 }
+
+/* About Section Background Color */
 .section-solid {
-  background: #ededed;
+  background: #D3D1D1;
   color: #646464;
 }
 .section-audio-examples {
@@ -229,7 +231,7 @@ a:after {
  *	Footer
  * --------------------------------------------------------- */
 footer {
-  background: #1d1d1d;
+  background: #16202b;
   padding: 30px 0 40px;
   font-size: 13px;
 }
@@ -982,10 +984,7 @@ form.signup button.btn {
   left: 0;
   height: 8px;
   background-color: #fff;
-  -webkit-transition: -webkit-transform 0.3s, width 1s;
-  -moz-transition: width 1s;
-  -o-transform: width 1s;
-  transition: transform .3s, width 1s;
+
   pointer-events: none;
 }
 .pace .pace-active .pace-progress {
@@ -1416,7 +1415,7 @@ form.signup button.btn {
  * Contact
  * --------------------------------------------------------- */
 #contact {
-  background: #2d2e2e;
+  background: #2F3A57;
 }
 .list-contacts {
   list-style: none;
@@ -1452,7 +1451,7 @@ form.signup button.btn {
 .main {
   width: 100%;
   height: 350px;
-  background-color: #010136;
+  background-color: #2F3A57;
   display: block;
   position: relative;
   z-index: 2000;
