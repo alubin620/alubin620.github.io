@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Google Drive Audio Player</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .player-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 640px;
+      width: 90%;
+      text-align: center;
+    }
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100px;
+      border-radius: 4px;
+    }
+    h1 {
+      margin-bottom: 16px;
+      color: #333;
+      font-weight: normal;
+    }
+  </style>
+</head>
+<body>
+  <div class="player-container">
+    <h1>Listen to Audio</h1>
+    <iframe
+      src="https://drive.google.com/file/d/1CAK7uegyN9CR9A13LcPkZXhNrkrv9ly9/preview"
+      allow="autoplay"
+      allowfullscreen
+      loading="lazy"
+      title="Google Drive Audio Player"
+    ></iframe>
+  </div>
+</body>
+</html>
